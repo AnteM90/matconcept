@@ -239,11 +239,14 @@
 
   <div class="form-wrap">
     <div id="form">
-      <div class="form-inner">
-        <input type="email" id="email" placeholder="Din e-postadress">
-        <button onclick="submit()">Anmäl intresse</button>
-      </div>
-      <p class="form-note">Vi skickar ett mejl när vi lanserar. Inga spam.</p>
+      <form action="https://formspree.io/f/mnjwjzek" method="POST">
+        <div class="form-inner">
+          <input type="email" name="email" id="email" placeholder="Din e-postadress" required>
+          <button type="submit">Anmäl intresse</button>
+        </div>
+        <input type="hidden" name="name" value="Intresseanmälan MatConcept">
+        <p class="form-note">Vi skickar ett mejl när vi lanserar. Inga spam.</p>
+      </form>
     </div>
     <div class="success" id="success">
       <div class="success-icon">🌿</div>
