@@ -269,6 +269,15 @@
       return;
     }
 
+    // Send to Formspree
+    fetch('https://formspree.io/f/mnjwjzek', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, name: 'Intresseanmälan MatConcept' })
+    }).then(function(response) {
+      console.log('Formspree:', response.status);
+    });
+
     // Send autoreply via EmailJS
     emailjs.send('service_nazhgyo', 'template_pvqux0u', {
       name: 'Vän',
@@ -277,13 +286,6 @@
       console.log('Autosvar skickat!');
     }, function(error) {
       console.log('EmailJS error:', error);
-    });
-
-    // Also send to Formspree via fetch
-    fetch('https://formspree.io/f/mnjwjzek', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, name: 'Intresseanmälan' })
     });
 
     // Show success
