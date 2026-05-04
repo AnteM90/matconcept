@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MatConcept — Kommer snart</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+  emailjs.init('Qdsu2M_b5Nl9SVkwP');
+</script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -229,7 +232,7 @@
       </div>
       <div class="feature">
         <div class="feature-icon">🇸🇪</div>
-        <div class="feature-text">Alltid svenskt kött</div>
+        <div class="feature-text">Alltid svenskt kött — kyckling & fläsk</div>
       </div>
     </div>
 
@@ -264,12 +267,22 @@
 <script>
   function submit() {
     const email = document.getElementById('email').value.trim();
+    const name = document.getElementById('name') ? document.getElementById('name').value.trim() : 'Vän';
     if (!email || !email.includes('@')) {
       alert('Vänligen ange en giltig e-postadress.');
       return;
     }
-    document.getElementById('form').style.display = 'none';
-    document.getElementById('success').style.display = 'block';
+    emailjs.send('service_nazhgyo', 'template_pvqux0u', {
+      name: name || 'Vän',
+      email: email,
+    }).then(function() {
+      document.getElementById('form').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    }, function(error) {
+      console.log('EmailJS error:', error);
+      document.getElementById('form').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    });
   }
 </script>
 </body>
