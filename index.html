@@ -242,6 +242,7 @@
 
   <div class="form-wrap">
     <div id="form">
+      <input class="form-name" type="text" id="name" placeholder="Ditt namn" style="width:100%;padding:0.9rem 1.2rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:2px;color:#fafaf8;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;margin-bottom:0.8rem;">
       <div class="form-inner">
         <input type="email" id="email" placeholder="Din e-postadress" required>
         <button type="button" onclick="submit()">Anmäl intresse</button>
@@ -264,6 +265,7 @@
 <script>
   function submit() {
     const email = document.getElementById('email').value.trim();
+    const name = document.getElementById('name').value.trim() || 'Vän';
     if (!email || !email.includes('@')) {
       alert('Vänligen ange en giltig e-postadress.');
       return;
@@ -273,14 +275,14 @@
     fetch('https://formspree.io/f/mnjwjzek', {
       method: 'POST',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, name: 'Intresseanmälan MatConcept' })
+      body: JSON.stringify({ email: email, name: name })
     }).then(function(response) {
       console.log('Formspree:', response.status);
     });
 
     // Send autoreply via EmailJS
     emailjs.send('service_nazhgyo', 'template_pvqux0u', {
-      name: 'Vän',
+      name: name,
       email: email,
     }).then(function() {
       console.log('Autosvar skickat!');
