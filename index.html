@@ -792,7 +792,7 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
         <button onclick="addMixaRow()" style="background:transparent;border:1px dashed rgba(106,170,121,0.4);color:var(--accent);padding:0.5rem 1.2rem;font-size:0.78rem;letter-spacing:0.1em;cursor:pointer;border-radius:4px;font-family:var(--sans);transition:all 0.2s;">+ Lägg till kombination</button>
         <div style="display:flex;align-items:center;gap:1.2rem;">
           <div style="font-size:0.85rem;color:var(--muted);">Totalt: <span id="mixa-total" style="font-size:1.1rem;font-weight:600;color:var(--text);">0 kr</span></div>
-          <button onclick="copyMixaToOrder()" style="background:var(--accent);color:#0f0d0c;border:none;padding:0.55rem 1.3rem;font-size:0.78rem;letter-spacing:0.1em;cursor:pointer;border-radius:4px;font-family:var(--sans);font-weight:600;transition:opacity 0.2s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Kopiera till beställning ↓</button>
+          <button onclick="copyMixaToOrder()" style="background:var(--accent);color:#0f0d0c;border:none;padding:0.55rem 1.3rem;font-size:0.78rem;letter-spacing:0.1em;cursor:pointer;border-radius:4px;font-family:var(--sans);font-weight:600;transition:opacity 0.2s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Visa min kombination</button>
         </div>
       </div>
 
@@ -972,14 +972,8 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
       });
       if (lines.length === 0) { alert('Välj minst en kombination först!'); return; }
       const total = document.getElementById('mixa-total').textContent;
-      const summary = 'Mixa & Matcha:\n' + lines.join('\n') + '\nTotalt: ' + total;
-      const orderField = document.getElementById('f-order');
-      if (orderField) {
-        orderField.value = (orderField.value ? orderField.value + '\n\n' : '') + summary;
-        orderField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        orderField.style.borderColor = 'var(--accent)';
-        setTimeout(() => orderField.style.borderColor = '', 2000);
-      }
+      const summary = 'Din kombination:\n\n' + lines.join('\n') + '\n\nTotalt: ' + total + '\n\nSpara gärna denna kombination. När vi lanserar i höst kan du beställa den direkt!';
+      alert(summary);
     }
     </script>
   </div>
@@ -1159,7 +1153,7 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
   <h2>Anmäl <em>intresse</em></h2>
   <p class="intro">Vi lanserar hösten 2026. Lämna dina uppgifter så är du först att veta när vi öppnar, och får ett exklusivt introduktionserbjudande på din första beställning.</p>
   <div class="order-box reveal">
-    <form id="order-form" action="https://formspree.io/f/mnjwjzek" method="POST" onsubmit="sendAutoreply(event)">
+    <form id="order-form" action="https://formspree.io/f/mnjwjzek" method="POST" onsubmit="handleSignup(event)">
       <div class="f-row"><label>Ditt namn</label><input type="text" name="name" placeholder="Anna Lindqvist" required></div>
       <div class="f-row"><label>E-postadress</label><input type="email" name="email" placeholder="din@email.se" required></div>
       <div class="f-row"><label>Telefonnummer <span style="color:var(--muted);font-weight:300;">(valfritt)</span></label><input type="tel" name="phone" placeholder="070-123 45 67"></div>
@@ -1339,26 +1333,48 @@ if (!localStorage.getItem('mc_cookies')) {
 }
 
 
-function sendAutoreply(e) {
-  const name = document.querySelector('input[name="name"]').value.trim();
-  const email = document.querySelector('input[name="email"]').value.trim();
-  const order = document.getElementById('f-order').value.trim();
-  const address = document.querySelector('input[name="address"]').value.trim();
-  const date = document.querySelector('input[name="delivery_date"]:checked');
-  const deliveryDate = date ? date.value : 'Ej valt';
+function handleSignup(e) {
+  e.preventDefault();
+  const form = document.getElementById('order-form');
+  const name = (form.querySelector('input[name="name"]') || {}).value ? form.querySelector('input[name="name"]').value.trim() : '';
+  const email = (form.querySelector('input[name="email"]') || {}).value ? form.querySelector('input[name="email"]').value.trim() : '';
+  const phoneEl = form.querySelector('input[name="phone"]');
+  const areaEl = form.querySelector('input[name="area"]');
+  const phone = phoneEl ? phoneEl.value.trim() : '';
+  const area = areaEl ? areaEl.value.trim() : '';
 
-  if (name && email) {
-    try {
+  if (!name || !email) return;
+
+  const showSuccess = function() {
+    form.style.display = 'none';
+    const sb = document.getElementById('success-box');
+    if (sb) sb.style.display = 'block';
+  };
+
+  // Send to Formspree (so you get the signup)
+  fetch(form.action, {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: new FormData(form)
+  }).then(function() {
+    showSuccess();
+  }).catch(function() {
+    showSuccess();
+  });
+
+  // Send autoreply to customer via EmailJS (optional, won't block)
+  try {
+    if (window.emailjs) {
       emailjs.send('service_nazhgyo', 'template_pvqux0u', {
         name: name,
         email: email,
-        order: order || 'Se beställning',
-        address: address || 'Ej angiven',
-        delivery_date: deliveryDate,
-        total: document.getElementById('total').textContent || '0',
+        order: 'Intresseanmalan',
+        address: area || 'Ej angiven',
+        delivery_date: 'Lansering host 2026',
+        total: phone || '-',
       });
-    } catch (err) {}
-  }
+    }
+  } catch (err) {}
 }
 
 // Tabs
