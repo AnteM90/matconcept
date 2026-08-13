@@ -926,7 +926,7 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
     </ul></div>
   </div>
   <div class="footer-bottom" style="flex-direction:column;gap:0.6rem;text-align:center;">
-    <span>© 2026 MatConcept · Ante Mikulic · Org.nr: 900225-XXXX · Jönköping</span>
+    <span>© 2026 MatConcept · Org.nr: 900225-XXXX · Jönköping</span>
     <span style="font-size:0.62rem;">
       <a href="#" onclick="openLegal('kopvillkor');return false;" style="color:var(--muted-soft);text-decoration:none;">Köpvillkor</a>
       &nbsp;·&nbsp;
@@ -945,11 +945,26 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
 <script>
 const legalContent = {
   kopvillkor: `<h2 style="font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--accent);margin-bottom:1.5rem;">Köpvillkor</h2>
-    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;">Se fullständiga köpvillkor på matconcept.se.</p>`,
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 1. Allmänt</strong><br>Dessa köpvillkor gäller för alla köp på matconcept.se. Säljare är Ante Mikulic, MatConcept (enskild firma), org.nr 900225-XXXX, Jönköping. Genom att beställa accepterar du dessa villkor.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 2. Produkter &amp; allergeninformation</strong><br>MatConcept säljer färska, hantverksmässigt tillagade livsmedel. Vi informerar om samtliga 14 allergener enligt EU-förordning (EU) nr 1169/2011. Kunder med svår allergi uppmanas kontakta info@matconcept.se innan beställning.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 3. Beställning</strong><br>Beställningsfrist: fredagar kl 12:00. Leverans: söndagar. Minsta order: 249 kr. Avtalet bekräftas via e-post.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 4. Priser &amp; betalning</strong><br>Alla priser i SEK inkl. moms. Leverans: 69 kr, fri över 600 kr. Betalning via Swish efter orderbekräftelse.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 5. Leverans &amp; kylkedja</strong><br>Leverans till adress i Jönköping &amp; Huskvarna varje söndag. MatConcept ansvarar för korrekt temperatur (max +4°C) fram till leverans. Kunden ansvarar för kylförvaring omgående efter mottagande.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 6. Ångerrätt</strong><br>Ångerrätt gäller inte för färska livsmedel (Distansavtalslagen 2 kap. 11 § punkt 4). Vid felbeställning, kontakta oss senast fredag kl 10:00.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 7. Reklamation</strong><br>Reklamation görs inom 2 dagar från leverans via info@matconcept.se med foto. Vid godkänd reklamation: omleverans eller återbetalning.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 8. Tvistelösning</strong><br>ARN: <a href="https://www.arn.se" target="_blank" style="color:var(--accent);">www.arn.se</a>. EU ODR: <a href="https://ec.europa.eu/consumers/odr" target="_blank" style="color:var(--accent);">ec.europa.eu/consumers/odr</a>. Kontakt: info@matconcept.se.</p>
+    <p style="font-size:0.72rem;color:rgba(240,236,228,0.2);margin-top:1.5rem;">Uppdaterade: 2026-05-04</p>`,
   integritet: `<h2 style="font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--accent);margin-bottom:1.5rem;">Integritetspolicy</h2>
-    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;">Se fullständig integritetspolicy på matconcept.se.</p>`,
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Personuppgiftsansvarig</strong><br>Ante Mikulic, MatConcept, org.nr 900225-XXXX, Jönköping. E-post: info@matconcept.se.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Vilka uppgifter samlar vi in?</strong><br>Namn, e-postadress, telefonnummer, leveransadress och orderhistorik.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Varför?</strong><br>För att genomföra och leverera din beställning (rättslig grund: avtal) samt för bokföringsskyldighet (rättslig grund: rättslig förpliktelse).</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Hur länge?</strong><br>Orderuppgifter: 12 månader. Bokföringsunderlag: 7 år.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Dina rättigheter</strong><br>Du har rätt att begära tillgång, rättelse eller radering av dina uppgifter. Kontakta oss: info@matconcept.se. Klagomål: IMY, <a href="https://www.imy.se" target="_blank" style="color:var(--accent);">www.imy.se</a>.</p>
+    <p style="font-size:0.72rem;color:rgba(240,236,228,0.2);margin-top:1.5rem;">Uppdaterad: 2026-05-04</p>`,
   cookies: `<h2 style="font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--accent);margin-bottom:1.5rem;">Cookies</h2>
-    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;">Vi använder enbart tekniskt nödvändiga cookies.</p>`
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;">Vi använder enbart tekniskt nödvändiga cookies för att formulär och beställningsfunktioner ska fungera (EmailJS, Formspree). Vi använder inga marknadsföringscookies eller spårning av tredje part.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;">Du kan stänga av cookies i din webbläsares inställningar, men då kan formuläret sluta fungera.</p>
+    <p style="font-size:0.72rem;color:rgba(240,236,228,0.2);margin-top:1.5rem;">Uppdaterad: 2026-05-04</p>`
 };
 function openLegal(id) {
   document.getElementById('legal-content').innerHTML = legalContent[id];
