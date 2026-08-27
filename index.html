@@ -129,6 +129,15 @@ nav.scrolled { padding: 1rem 3rem; border-bottom-color: var(--line); background:
 .nav-links { display: flex; gap: 1.6rem; list-style: none; align-items: center; }
 .nav-links a { font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; font-weight: 400; }
 .nav-links a:hover { color: var(--text); }
+.nav-burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 210; }
+.nav-burger span { display: block; width: 26px; height: 2px; background: var(--text); transition: 0.3s; }
+.mobile-menu { display: none; position: fixed; inset: 0; background: rgba(15,16,13,0.99); z-index: 400; opacity: 0; transition: opacity 0.3s; }
+.mobile-menu.open { display: flex; opacity: 1; align-items: center; justify-content: center; }
+.mm-inner { display: flex; flex-direction: column; align-items: center; gap: 2rem; text-align: center; }
+.mm-close { position: absolute; top: 1.5rem; right: 1.8rem; background: none; border: none; color: var(--text); font-size: 2.6rem; cursor: pointer; line-height: 1; font-weight: 200; }
+.mm-inner a { font-family: var(--serif); font-size: 2rem; color: var(--text); text-decoration: none; font-weight: 400; letter-spacing: -0.01em; }
+.mm-inner a:hover { color: var(--accent); }
+.mm-inner a.mm-cta { margin-top: 1rem; background: var(--accent); color: var(--bg-deep); padding: 0.9rem 2.4rem; border-radius: 100px; font-family: var(--sans); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
 .nav-cta { background: var(--accent) !important; color: var(--bg-deep) !important; padding: 0.62rem 1.3rem; border-radius: 999px; font-weight: 500 !important; }
 .nav-cta:hover { background: var(--accent2) !important; }
 
@@ -482,10 +491,8 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
   nav, nav.scrolled { padding: 0.9rem 1.2rem; }
   .nl-tag { display: none !important; }
   nav > img, nav a + img, nav img[alt="MatConcept"] { display: none !important; }
-  .nav-links { gap: 0; }
-  .nav-links li { display: none; }
-  .nav-links li:last-child { display: list-item; }
-  .nav-cta { padding: 0.5rem 0.9rem; font-size: 0.7rem; white-space: nowrap; }
+  .nav-links { display: none !important; }
+  .nav-burger { display: flex !important; }
 
   /* SECTIONS */
   section { padding: 3.5rem 1.2rem; }
@@ -607,8 +614,22 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
     <li><a href="#delivery">Leverans</a></li>
     <li><a href="#order" class="nav-cta">Anmäl intresse</a></li>
   </ul>
+  <button class="nav-burger" onclick="toggleMobileMenu()" aria-label="Meny">
+    <span></span><span></span><span></span>
+  </button>
   <img src="data:image/png;base64,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" alt="MatConcept" style="height:58px;width:58px;border-radius:50%;object-fit:cover;flex-shrink:0;margin-left:1.5rem;">
 </nav>
+
+<!-- MOBIL MENY -->
+<div id="mobile-menu" class="mobile-menu" onclick="closeMobileMenu()">
+  <div class="mm-inner" onclick="event.stopPropagation()">
+    <button class="mm-close" onclick="closeMobileMenu()" aria-label="Stäng">&times;</button>
+    <a href="#how" onclick="closeMobileMenu()">Så fungerar det</a>
+    <a href="#menu" onclick="closeMobileMenu()">Utbud</a>
+    <a href="#delivery" onclick="closeMobileMenu()">Leverans</a>
+    <a href="#order" onclick="closeMobileMenu()" class="mm-cta">Anmäl intresse</a>
+  </div>
+</div>
 
 <!-- STORPACK BANNER -->
 <div class="storpack-banner">
@@ -752,8 +773,6 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
       <button class="tab active" onclick="switchTab('proteiner',this)">Storpack protein</button>
       <button class="tab" onclick="switchTab('mixa',this)">Mixa &amp; Matcha</button>
       <button class="tab" onclick="switchTab('soppor',this)">Soppor</button>
-      <button class="tab" onclick="switchTab('frukost',this)">Frukost</button>
-      <button class="tab" onclick="switchTab('drycker',this)">Hälsodrycker</button>
       <button class="tab" onclick="switchTab('tillbehor',this)">Kolhydrater</button>
       <button class="tab" onclick="switchTab('sotak',this)">Lite Till</button>
     </div>
@@ -833,7 +852,7 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
 
       <div style="margin-bottom:1.5rem;">
         <div class="section-eyebrow" style="margin-bottom:0.5rem;">Bygg din måltid</div>
-        <p style="font-size:0.85rem;color:var(--muted);line-height:1.7;">Välj protein + kolhydrat + mängd. Lägg till hur många kombinationer du vill. Ugnsrostade grönsaker ingår automatiskt (ej vid bolognese) men kan väljas bort.</p>
+        <p style="font-size:0.85rem;color:var(--muted);line-height:1.7;">Välj protein + kolhydrat + mängd. Lägg till hur många kombinationer du vill. Vill du ha ugnsrostade grönsaker till kryssar du i det (ej vid bolognese).</p>
       </div>
 
       <div id="mixa-rows">
@@ -1093,36 +1112,6 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
   </div>
 
   <!-- FRUKOST -->
-  <div id="tab-frukost" class="tab-panel reveal">
-    <div style="grid-column:1/-1;text-align:center;padding:5rem 2rem;background:rgba(106,170,121,0.05);border:1px dashed rgba(106,170,121,0.3);border-radius:4px;">
-      <div style="font-size:2.5rem;opacity:0.5;margin-bottom:1rem;">🥣</div>
-      <h3 style="font-family:var(--serif);font-size:1.8rem;color:var(--text);margin-bottom:0.8rem;font-weight:300;">Frukost, kommer snart</h3>
-      <p style="color:var(--text-soft);max-width:480px;margin:0 auto;line-height:1.7;">Vi finslipar våra frukostalternativ med högt proteininnehåll. De dyker upp här lagom till lansering. Följ oss för att vara först att smaka!</p>
-    </div>
-  </div>
-
-  <!-- DRYCKER -->
-  <div id="tab-drycker" class="tab-panel reveal">
-    <div class="card">
-      <div class="card-body">
-        <h3>Ingefära &amp; Citron</h3>
-        <p>Naturlig hälsodryck på färsk ingefära, pressad citron, vatten och en touch honung.</p>
-        <div class="card-footer">
-          <div class="card-price"><span class="cp-now">39 kr</span><span class="cp-unit">/ 500ml · 79 kr / 1L</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h3>Ingefära, Citrus &amp; Gurkmeja</h3>
-        <p>Kraftfull mix av ingefära, citron, apelsin, lime och gurkmeja. Anti-inflammatorisk boost.</p>
-        <div class="card-footer">
-          <div class="card-price"><span class="cp-now">49 kr</span><span class="cp-unit">/ 500ml · 89 kr / 1L</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- TILLBEHÖR -->
   <div id="tab-tillbehor" class="tab-panel reveal">
     <div class="card">
@@ -1153,8 +1142,8 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
       
       <div class="card-body">
         <h3>Ugnsrostade Grönsaker</h3>
-        <p>Broccoli, paprika, zucchini och rödlök rostade med olivolja och örter.</p>
-        <div class="card-footer"><div class="card-price"><span class="cp-now">49 kr</span><span class="cp-unit">/ 500g</span></div></div>
+        <p>Paprika, broccoli, lök och zucchini rostade med olivolja och örter.</p>
+        <div class="card-footer"><div class="card-price"><span class="cp-now">59 kr</span><span class="cp-unit">/ 500g</span></div></div>
       </div>
     </div>
   </div>
@@ -1179,7 +1168,7 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
   <div class="personal-menu-text" style="text-align:center;align-items:center;">
     <div class="section-eyebrow">Skräddarsytt</div>
     <h3>Vill du ha en <em>personlig meny?</em></h3>
-    <p style="margin-left:auto;margin-right:auto;">Vi kan anpassa innehållet efter dina mål, träningsdagar eller preferenser. Kontakta oss så designar vi en meny åt dig.</p>
+    <p style="margin-left:auto;margin-right:auto;">Vi anpassar menyn helt efter dina mål, din träning och dina matpreferenser. Oavsett om du vill gå ner i vikt, bygga muskler, äta mer protein eller följa en specifik kosthållning hjälper vi dig. Vi kan skräddarsy efter kalorier, protein, antal måltider, allergier och önskemål. Personlig meny levereras på lördagar. Kontakta oss så skapar vi en meny som passar just dig.</p>
     <div>
       <a href="mailto:info@matconcept.se" class="btn btn-primary">Kontakta oss</a>
     </div>
@@ -1214,8 +1203,8 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
       <div class="price-row"><div class="price-row-name">Fläskfilé (rå)</div><div class="price-row-val">159 kr <em>/ 500g</em></div></div>
       <div class="price-row"><div class="price-row-name">Bolognesesås</div><div class="price-row-val">179 kr <em>/ 500g</em></div></div>
       <div class="price-row"><div class="price-row-name">Kycklingssoppa</div><div class="price-row-val">79 kr <em>/ 500ml</em></div></div>
-      <div class="price-row"><div class="price-row-name">Hälsodrycker</div><div class="price-row-val">39 kr <em>/ 500ml</em></div></div>
-      <div class="price-row"><div class="price-row-name">Tillbehör</div><div class="price-row-val">49 kr <em>/ 500g</em></div></div>
+      <div class="price-row"><div class="price-row-name">Kolhydrater (ris, potatismos, pasta)</div><div class="price-row-val">49 kr <em>/ 500g</em></div></div>
+      <div class="price-row"><div class="price-row-name">Ugnsrostade grönsaker</div><div class="price-row-val">59 kr <em>/ 500g</em></div></div>
       <div class="price-row"><div class="price-row-name">Leverans</div><div class="price-row-val">69 kr <em>(0 kr över 600)</em></div></div>
     </div>
     <p class="price-note">🎉 <strong style="color:var(--accent);">Ny kund? Få 20% rabatt på dina 5 första leveranser.</strong> Alla vikter avser råvara. Storpack upp till 5 kg / 5 L per produkt.</p>
@@ -1348,8 +1337,7 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
       <li><a href="#menu">Storpack protein</a></li>
       <li><a href="#menu">Mixa &amp; Matcha</a></li>
       <li><a href="#menu">Soppor</a></li>
-      <li><a href="#menu">Hälsodrycker</a></li>
-      <li><a href="#menu">Frukost &amp; tillbehör</a></li>
+      <li><a href="#menu">Kolhydrater &amp; grönsaker</a></li>
     </ul></div>
     <div class="footer-col"><h4>Information</h4><ul>
       <li><a href="#how">Så fungerar det</a></li>
@@ -1365,7 +1353,7 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
     </ul></div>
   </div>
   <div class="footer-bottom" style="flex-direction:column;gap:0.6rem;text-align:center;">
-    <span>© 2026 MatConcept · Ante Mikulic · Org.nr: 900225-XXXX · Jönköping</span>
+    <span>© 2026 MatConcept · Jönköping</span>
     <span style="font-size:0.62rem;">
       <a href="#" onclick="openLegal('kopvillkor');return false;" style="color:var(--muted-soft);text-decoration:none;">Köpvillkor</a>
       &nbsp;·&nbsp;
@@ -1385,7 +1373,7 @@ footer { background: var(--bg-deep); padding: 5rem 3rem 2rem; border-top: 1px so
 // Legal modals
 const legalContent = {
   kopvillkor: `<h2 style="font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--accent);margin-bottom:1.5rem;">Köpvillkor</h2>
-    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 1. Allmänt</strong><br>Dessa köpvillkor gäller för alla köp på matconcept.se. Säljare är Ante Mikulic, MatConcept (enskild firma), org.nr 900225-XXXX, Jönköping. Genom att beställa accepterar du dessa villkor.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 1. Allmänt</strong><br>Dessa köpvillkor gäller för alla köp på matconcept.se. Säljare är MatConcept (enskild firma), Jönköping. Genom att beställa accepterar du dessa villkor.</p>
     <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 2. Produkter & allergeninformation</strong><br>MatConcept säljer färska, hantverksmässigt tillagade livsmedel. Vi informerar om samtliga 14 allergener enligt EU-förordning (EU) nr 1169/2011. Kunder med svår allergi uppmanas kontakta info@matconcept.se innan beställning.</p>
     <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 3. Beställning</strong><br>Beställningsfrist: fredagar kl 12:00. Leverans: söndagar. Minsta order: 249 kr. Avtalet bekräftas via e-post.</p>
     <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">§ 4. Priser & betalning</strong><br>Alla priser i SEK inkl. moms. Leverans: 69 kr, fri över 600 kr. Betalning via Swish efter orderbekräftelse.</p>
@@ -1396,7 +1384,7 @@ const legalContent = {
     <p style="font-size:0.72rem;color:rgba(240,236,228,0.2);margin-top:1.5rem;">Uppdaterade: 2026-05-04</p>`,
 
   integritet: `<h2 style="font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--accent);margin-bottom:1.5rem;">Integritetspolicy</h2>
-    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Personuppgiftsansvarig</strong><br>Ante Mikulic, MatConcept, org.nr 900225-XXXX, Jönköping. E-post: info@matconcept.se.</p>
+    <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Personuppgiftsansvarig</strong><br>MatConcept, Jönköping. E-post: info@matconcept.se.</p>
     <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Vilka uppgifter samlar vi in?</strong><br>Namn, e-postadress, telefonnummer, leveransadress och orderhistorik.</p>
     <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Varför?</strong><br>För att genomföra och leverera din beställning (rättslig grund: avtal) samt för bokföringsskyldighet (rättslig grund: rättslig förpliktelse).</p>
     <p style="font-size:0.82rem;color:rgba(240,236,228,0.45);line-height:1.8;margin-bottom:0.8rem;"><strong style="color:rgba(240,236,228,0.7);">Hur länge?</strong><br>Orderuppgifter: 12 månader. Bokföringsunderlag: 7 år.</p>
@@ -1480,6 +1468,14 @@ function switchTab(name, btn) {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   btn.classList.add('active');
+}
+
+// Mobil meny
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
 }
 
 // Scroll reveal
