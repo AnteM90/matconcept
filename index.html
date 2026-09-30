@@ -9,6 +9,20 @@
 <link rel="manifest" href="manifest.json">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="text/javascript">emailjs.init('Qdsu2M_b5Nl9SVkwP');</script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script type="text/javascript">
+const firebaseConfig = {
+  apiKey: "AIzaSyBc-0FYH8nFp4aRB-w9R0PTT_lx5X8NuQc",
+  authDomain: "matconcep-sweden.firebaseapp.com",
+  projectId: "matconcep-sweden",
+  storageBucket: "matconcep-sweden.firebasestorage.app",
+  messagingSenderId: "659629582396",
+  appId: "1:659629582396:web:69296e0772519b29183b39"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1599,15 +1613,9 @@ function setStars(val) {
   });
 }
 
-// Submit review
-function submitReview() {
-  const name = document.getElementById('r-name').value.trim();
-  const text = document.getElementById('r-text').value.trim();
-  if (!name || !text || selectedStars === 0) {
-    alert('Fyll i namn, betyg och recension!');
-    return;
-  }
-  const stars = '★'.repeat(selectedStars);
+// Build one review card element
+function renderReviewCard(name, text, starCount) {
+  const stars = '★'.repeat(starCount);
   const initial = name.charAt(0).toUpperCase();
   const card = document.createElement('div');
   card.className = 'review-card';
@@ -1616,9 +1624,50 @@ function submitReview() {
     '<p class="review-text">' + text + '</p>' +
     '<div class="review-author"><div class="review-avatar">' + initial + '</div>' +
     '<div><strong>' + name + '</strong><span>Jönköping</span></div></div>';
-  document.getElementById('reviews-grid').appendChild(card);
-  document.getElementById('review-form').style.display = 'none';
-  document.getElementById('review-success').style.display = 'block';
+  return card;
+}
+
+// Load saved reviews from Firestore, newest first
+function loadReviews() {
+  db.collection('reviews').orderBy('timestamp', 'desc').limit(30).get()
+    .then(snapshot => {
+      const grid = document.getElementById('reviews-grid');
+      grid.innerHTML = '';
+      snapshot.forEach(doc => {
+        const r = doc.data();
+        grid.appendChild(renderReviewCard(r.name, r.text, r.stars));
+      });
+    })
+    .catch(err => console.error('Kunde inte hämta recensioner:', err));
+}
+document.addEventListener('DOMContentLoaded', loadReviews);
+
+// Submit review
+function submitReview() {
+  const name = document.getElementById('r-name').value.trim();
+  const text = document.getElementById('r-text').value.trim();
+  if (!name || !text || selectedStars === 0) {
+    alert('Fyll i namn, betyg och recension!');
+    return;
+  }
+  const btn = document.querySelector('#review-form .f-submit');
+  btn.disabled = true;
+  btn.textContent = 'Skickar...';
+  db.collection('reviews').add({
+    name: name,
+    text: text,
+    stars: selectedStars,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    document.getElementById('reviews-grid').prepend(renderReviewCard(name, text, selectedStars));
+    document.getElementById('review-form').style.display = 'none';
+    document.getElementById('review-success').style.display = 'block';
+  }).catch(err => {
+    console.error('Kunde inte spara recension:', err);
+    alert('Något gick fel, försök igen om en liten stund.');
+    btn.disabled = false;
+    btn.textContent = 'Skicka recension →';
+  });
 }
 
 // PWA service worker
